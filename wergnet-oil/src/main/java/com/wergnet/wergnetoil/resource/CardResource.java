@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Card;
-import com.wergnet.wergnetoil.repopsitory.CardRepository;
+import com.wergnet.wergnetoil.repository.CardRepository;
 
 
 @RestController

@@ -1,4 +1,4 @@
-package com.wergnet.wergnetoil.repopsitory;
+package com.wergnet.wergnetoil.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
