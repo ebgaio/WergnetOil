@@ -40,7 +40,6 @@ public class CustomerResource {
 	public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer, HttpServletResponse response) {
 		Customer customerSave =  customerRepository.save(customer);
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, customerSave.getId()));
-		
 		return ResponseEntity.status(HttpStatus.CREATED).body(customerSave);
 	}
 
