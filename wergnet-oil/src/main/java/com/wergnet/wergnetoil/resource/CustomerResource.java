@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Customer;
-import com.wergnet.wergnetoil.repopsitory.CustomerRepository;
+import com.wergnet.wergnetoil.repository.CustomerRepository;
 
 @RestController
 @RequestMapping("/customers")
