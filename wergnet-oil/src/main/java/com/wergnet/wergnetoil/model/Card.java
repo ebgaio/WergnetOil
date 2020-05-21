@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -21,7 +20,7 @@ public class Card {
 	@Column(name = "id_card")
 	private Long id;
 
-	private Long cardNumber;
+	private String cardNumber;
 	private BigDecimal balance;
 	private boolean active;
 	
@@ -48,11 +47,11 @@ public class Card {
 		this.id = id;
 	}
 
-	public Long getCardNumber() {
+	public String getCardNumber() {
 		return cardNumber;
 	}
 
-	public void setCardNumber(Long cardNumber) {
+	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
 	}
 
@@ -65,6 +64,10 @@ public class Card {
 	}
 	
 	public boolean isActive() {
+		return active;
+	}
+	
+	public boolean getActive() {
 		return active;
 	}
 	

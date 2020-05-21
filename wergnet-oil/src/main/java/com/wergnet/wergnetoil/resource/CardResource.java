@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,8 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Card;
-import com.wergnet.wergnetoil.model.Customer;
 import com.wergnet.wergnetoil.repopsitory.CardRepository;
+import com.wergnet.wergnetoil.service.CardNumberGenerator;
+import com.wergnet.wergnetoil.service.CardService;
 
 
 @RestController
@@ -35,6 +37,12 @@ public class CardResource {
 	@Autowired
 	private ApplicationEventPublisher publisher;
 	
+	@Autowired
+	private CardService cardService;
+	
+	@Autowired
+	private CardNumberGenerator randomCreditCardNumberGenerator;
+	
 	@GetMapping
 	private List<Card> listAll() {
 		return cardRepository.findAll();
@@ -42,7 +50,8 @@ public class CardResource {
 	
 	@PostMapping
 	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, HttpServletResponse response) {
-//		card.setCustomer(new Customer(1L));
+		String cardNumber = randomCreditCardNumberGenerator.generateNumber();
+		card.setCardNumber(cardNumber);
 		Card cardSave = cardRepository.save(card);
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, card.getId()));
 		
@@ -59,6 +68,12 @@ public class CardResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long code) {
 		cardRepository.deleteById(code);
+	}
+	
+	@PutMapping("/{code}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updatePropertyActive(@PathVariable Long code, @RequestBody Boolean active) {
+		cardService.updatePropertyActive(code, active);
 	}
 	
 }
