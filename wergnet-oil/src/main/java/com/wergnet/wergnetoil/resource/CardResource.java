@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Card;
-import com.wergnet.wergnetoil.repopsitory.CardRepository;
+import com.wergnet.wergnetoil.model.Customer;
+import com.wergnet.wergnetoil.repository.CardRepository;
+import com.wergnet.wergnetoil.repository.CustomerRepository;
 import com.wergnet.wergnetoil.service.CardNumberGenerator;
 import com.wergnet.wergnetoil.service.CardService;
 
@@ -33,6 +35,9 @@ public class CardResource {
 
 	@Autowired
 	private CardRepository cardRepository;
+	
+	@Autowired
+	private CustomerRepository customerRepository;
 	
 	@Autowired
 	private ApplicationEventPublisher publisher;
@@ -48,10 +53,12 @@ public class CardResource {
 		return cardRepository.findAll();
 	}
 	
-	@PostMapping
-	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, HttpServletResponse response) {
+	@PostMapping("/{customerId}")
+	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, @PathVariable Long customerId, HttpServletResponse response) {
+		Optional<Customer> customerSave = customerRepository.findById(customerId);
 		String cardNumber = randomCreditCardNumberGenerator.generateNumber();
 		card.setCardNumber(cardNumber);
+		card.setCustomer(customerSave.get());
 		Card cardSave = cardRepository.save(card);
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, card.getId()));
 		

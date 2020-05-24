@@ -7,7 +7,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.wergnet.wergnetoil.model.Customer;
-import com.wergnet.wergnetoil.repopsitory.CustomerRepository;
+import com.wergnet.wergnetoil.repository.CustomerRepository;
 
 @Service
 public class CustomerService {

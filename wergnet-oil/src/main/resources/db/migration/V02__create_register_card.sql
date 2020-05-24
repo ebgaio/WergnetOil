@@ -1,4 +1,4 @@
-create table Card (
+create table card (
 	id_card bigint primary key auto_increment,
 	card_number varchar(20) not null,
 	active boolean not null,

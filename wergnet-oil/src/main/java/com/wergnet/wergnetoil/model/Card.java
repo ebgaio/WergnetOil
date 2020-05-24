@@ -4,12 +4,15 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "card")
@@ -24,10 +27,8 @@ public class Card {
 	private BigDecimal balance;
 	private boolean active;
 	
-//	@OneToOne(mappedBy = "card")
-//	private Customer customer;
-
-	@ManyToOne
+	@JsonIgnore
+	@ManyToOne(fetch =  FetchType.EAGER)
 	@JoinColumn(name = "customer_id", nullable = false)
 	public Customer customer;
 	

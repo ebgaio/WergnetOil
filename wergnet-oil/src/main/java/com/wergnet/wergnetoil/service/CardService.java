@@ -5,7 +5,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.wergnet.wergnetoil.model.Card;
-import com.wergnet.wergnetoil.repopsitory.CardRepository;
+import com.wergnet.wergnetoil.repository.CardRepository;
 
 @Service
 public class CardService {

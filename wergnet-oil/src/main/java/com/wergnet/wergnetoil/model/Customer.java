@@ -5,6 +5,7 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,20 +30,16 @@ public class Customer {
 	@Embedded
 	private Address address;
 
-	@OneToMany(mappedBy = "customer")
+	@OneToMany(mappedBy = "customer", fetch =  FetchType.EAGER)
 	private List<Card> cards;
-	
-//	@OneToOne(cascade = CascadeType.ALL, fetch =  FetchType.EAGER)
-//	@JoinColumn(name = "id_customer", referencedColumnName = "id_card")
-//	private Card card;
 
-//	public Card getCard() {
-//		return card;
-//	}
-//
-//	public void setCard(Card card) {
-//		this.card = card;
-//	}
+	public List<Card> getCards() {
+		return cards;
+	}
+
+	public void setCards(List<Card> cards) {
+		this.cards.addAll(cards);
+	}
 
 	public Long getId() {
 		return id;

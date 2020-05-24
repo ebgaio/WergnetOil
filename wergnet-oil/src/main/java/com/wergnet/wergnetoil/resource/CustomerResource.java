@@ -22,8 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Card;
 import com.wergnet.wergnetoil.model.Customer;
-import com.wergnet.wergnetoil.repopsitory.CardRepository;
-import com.wergnet.wergnetoil.repopsitory.CustomerRepository;
+import com.wergnet.wergnetoil.repository.CardRepository;
+import com.wergnet.wergnetoil.repository.CustomerRepository;
 import com.wergnet.wergnetoil.service.CustomerService;
 
 @RestController
@@ -41,7 +41,7 @@ public class CustomerResource {
 	
 	@Autowired
 	private CustomerService customerService;
-	
+		
 	@GetMapping
 	public List<Customer> listAll() {
 		return customerRepository.findAll();
@@ -72,7 +72,10 @@ public class CustomerResource {
 	@GetMapping("/{code}")
 	public ResponseEntity<Customer> getByCode(@PathVariable Long code) {
 		Optional<Customer> customer = this.customerRepository.findById(code);
+//		List<Card> card = this.cardRepository.getCardsByCustomer(code);
+//		customer.get().setCards(card);
 		return customer.isPresent() ? ResponseEntity.ok(customer.get()) : ResponseEntity.notFound().build();
+//		return ResponseEntity.of(customer);
 	}
 	
 	@PutMapping
