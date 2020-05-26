@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -28,7 +27,7 @@ public class Card {
 	private boolean active;
 	
 	@JsonIgnore
-	@ManyToOne(fetch =  FetchType.EAGER)
+	@ManyToOne()
 	@JoinColumn(name = "customer_id", nullable = false)
 	public Customer customer;
 	
