@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,7 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.model.Card;
+import com.wergnet.wergnetoil.model.Customer;
 import com.wergnet.wergnetoil.repository.CardRepository;
+import com.wergnet.wergnetoil.repository.CustomerRepository;
+import com.wergnet.wergnetoil.service.CardNumberGenerator;
+import com.wergnet.wergnetoil.service.CardService;
 
 
 @RestController
@@ -32,17 +37,30 @@ public class CardResource {
 	private CardRepository cardRepository;
 	
 	@Autowired
+	private CustomerRepository customerRepository;
+	
+	@Autowired
 	private ApplicationEventPublisher publisher;
+	
+	@Autowired
+	private CardService cardService;
+	
+	@Autowired
+	private CardNumberGenerator randomCreditCardNumberGenerator;
 	
 	@GetMapping
 	private List<Card> listAll() {
 		return cardRepository.findAll();
 	}
 	
-	@PostMapping
-	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, HttpServletResponse response) {
+	@PostMapping("/{customerId}")
+	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, @PathVariable Long customerId, HttpServletResponse response) {
+		Optional<Customer> customerSave = customerRepository.findById(customerId);
+		String cardNumber = randomCreditCardNumberGenerator.generateNumber();
+		card.setCardNumber(cardNumber);
+		card.setCustomer(customerSave.get());
 		Card cardSave = cardRepository.save(card);
-		publisher.publishEvent(new ResourceCreatedEvent(this, response, cardSave.getId()));
+		publisher.publishEvent(new ResourceCreatedEvent(this, response, card.getId()));
 		
 		return ResponseEntity.status(HttpStatus.CREATED).body(cardSave);
 	}
@@ -57,6 +75,12 @@ public class CardResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void delete(@PathVariable Long code) {
 		cardRepository.deleteById(code);
+	}
+	
+	@PutMapping("/{code}/active")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void updatePropertyActive(@PathVariable Long code, @RequestBody Boolean active) {
+		cardService.updatePropertyActive(code, active);
 	}
 	
 }

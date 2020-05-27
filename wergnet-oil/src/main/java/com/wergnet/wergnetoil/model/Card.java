@@ -7,8 +7,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "card")
@@ -19,12 +22,22 @@ public class Card {
 	@Column(name = "id_card")
 	private Long id;
 
-	private Long cardNumber;
+	private String cardNumber;
 	private BigDecimal balance;
 	private boolean active;
 	
-	@OneToOne(mappedBy = "card")
-	private Customer customer;
+	@JsonIgnore
+	@ManyToOne()
+	@JoinColumn(name = "customer_id", nullable = false)
+	public Customer customer;
+	
+	public Customer getCustomer() {
+		return customer;
+	}
+
+	public void setCustomer(Customer customer) {
+		this.customer = customer;
+	}
 
 	public Long getId() {
 		return id;
@@ -34,11 +47,11 @@ public class Card {
 		this.id = id;
 	}
 
-	public Long getCardNumber() {
+	public String getCardNumber() {
 		return cardNumber;
 	}
 
-	public void setCardNumber(Long cardNumber) {
+	public void setCardNumber(String cardNumber) {
 		this.cardNumber = cardNumber;
 	}
 
@@ -51,6 +64,10 @@ public class Card {
 	}
 	
 	public boolean isActive() {
+		return active;
+	}
+	
+	public boolean getActive() {
 		return active;
 	}
 	

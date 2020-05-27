@@ -1,23 +1,19 @@
 package com.wergnet.wergnetoil.model;
 
-import javax.persistence.CascadeType;
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "customer")
 public class Customer {
-
-	public Customer() {
-	}
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,16 +29,15 @@ public class Customer {
 	@Embedded
 	private Address address;
 
-	@OneToOne(cascade = CascadeType.ALL, fetch =  FetchType.EAGER)
-	@JoinColumn(name = "id_customer", referencedColumnName = "id_card")
-	private Card card;
-	
-	public Card getCard() {
-		return card;
+	@OneToMany(mappedBy = "customer")
+	private List<Card> cards;
+
+	public List<Card> getCards() {
+		return cards;
 	}
 
-	public void setCard(Card card) {
-		this.card = card;
+	public void setCards(List<Card> cards) {
+		this.cards.addAll(cards);
 	}
 
 	public Long getId() {
@@ -70,6 +65,10 @@ public class Customer {
 	}
 
 	public boolean isActive() {
+		return active;
+	}
+	
+	public boolean getActive() {
 		return active;
 	}
 
