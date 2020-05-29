@@ -68,6 +68,7 @@ public class CardResource {
 	@GetMapping("/{code}")
 	private ResponseEntity<Card> getByCode(@PathVariable Long code) {
 		Optional<Card> card = this.cardRepository.findById(code);
+		System.out.println(card.get().getCustomer().getNameCustomer());
 		return card.isPresent() ? ResponseEntity.ok(card.get()) : ResponseEntity.notFound().build();
 	}
 	
