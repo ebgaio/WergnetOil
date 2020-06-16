@@ -1,5 +1,6 @@
 package com.wergnet.wergnetoil.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -37,7 +38,7 @@ public class Customer {
 	}
 
 	public void setCards(List<Card> cards) {
-		this.cards.addAll(cards);
+		this.cards = new ArrayList<Card>(cards);
 	}
 
 	public Long getId() {

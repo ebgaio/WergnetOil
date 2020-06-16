@@ -2,6 +2,7 @@ package com.wergnet.wergnetoil.service;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ public class CustomerService {
 
 	public Customer update(Long code, @Valid Customer customer) {
 		Customer customerSave = getCustomerByCode(code);
+		BeanUtils.copyProperties(customer, customerSave, "id", "cards");
 		return customerRepository.save(customerSave);
 	}
 	

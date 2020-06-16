@@ -1,13 +1,13 @@
 package com.wergnet.wergnetoil.resource;
 
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -55,10 +55,10 @@ public class CardResource {
 	
 	@PostMapping("/{customerId}")
 	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, @PathVariable Long customerId, HttpServletResponse response) {
-		Optional<Customer> customerSave = customerRepository.findById(customerId);
+		Customer customerSave = this.customerRepository.findById(customerId).orElseThrow(() -> new EmptyResultDataAccessException(1));
 		String cardNumber = randomCreditCardNumberGenerator.generateNumber();
 		card.setCardNumber(cardNumber);
-		card.setCustomer(customerSave.get());
+		card.setCustomer(customerSave);
 		Card cardSave = cardRepository.save(card);
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, card.getId()));
 		
@@ -66,10 +66,10 @@ public class CardResource {
 	}
 
 	@GetMapping("/{code}")
-	private ResponseEntity<Card> getByCode(@PathVariable Long code) {
-		Optional<Card> card = this.cardRepository.findById(code);
-		System.out.println(card.get().getCustomer().getNameCustomer());
-		return card.isPresent() ? ResponseEntity.ok(card.get()) : ResponseEntity.notFound().build();
+	private ResponseEntity<Card> getByCode(@PathVariable Long code, HttpServletResponse response) {
+		Card card = this.cardRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
+		publisher.publishEvent(new ResourceCreatedEvent(this, response, card.getId()));
+		return ResponseEntity.status(HttpStatus.OK).body(card);
 	}
 	
 	@DeleteMapping("/{code}")

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -78,7 +79,13 @@ public class CustomerResource {
 //		return ResponseEntity.of(customer);
 	}
 	
-	@PutMapping
+	@DeleteMapping("/{code}")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void delete(@PathVariable Long code) {
+		customerRepository.deleteById(code);
+	}
+	
+	@PutMapping("/{code}")
 	public ResponseEntity<Customer> update(@PathVariable Long code, @Valid @RequestBody Customer customer) {
 		Customer customerSave = customerService.update(code, customer);
 		return ResponseEntity.ok(customerSave);
