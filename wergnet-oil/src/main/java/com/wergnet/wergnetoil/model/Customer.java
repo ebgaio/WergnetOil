@@ -1,16 +1,10 @@
 package com.wergnet.wergnetoil.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "customer")
@@ -32,6 +26,16 @@ public class Customer {
 
 	@OneToMany(mappedBy = "customer")
 	private List<Card> cards;
+
+	@OneToMany(mappedBy = "customer")
+	private List<Transaction> transactions;
+
+	@JsonIgnore
+	public List<Transaction> getTransaction() { return transactions; }
+
+	public void setTransactions(List<Transaction> transactions) {
+		this.transactions = new ArrayList<Transaction>(transactions);
+	}
 
 	public List<Card> getCards() {
 		return cards;

@@ -4,7 +4,7 @@ create table card (
 	active boolean not null,
 	balance decimal(10.2) not null,
 	customer_id bigint not null,
-    KEY customer_ind (customer_id),
+    KEY customer_id (customer_id),
     CONSTRAINT card_fk foreign key (customer_id)
     references customer (id_customer)
 )engine=InnoDB default charset=UTF8MB4;

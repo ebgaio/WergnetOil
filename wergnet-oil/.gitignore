@@ -19,6 +19,24 @@ target/
 *.iws
 *.iml
 *.ipr
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
 ### NetBeans ###
 /nbproject/private/
@@ -27,6 +45,9 @@ target/
 /nbdist/
 /.nb-gradle/
 build/
+
+# virtual machine crash logs
+hs_err_pid*
 
 ### VS Code ###
 .vscode/

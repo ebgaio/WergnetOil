@@ -14,9 +14,9 @@ import com.wergnet.wergnetoil.event.ResourceCreatedEvent;
 public class ResourceCreatedListener implements ApplicationListener<ResourceCreatedEvent>{
 	
 	@Override
-	public void onApplicationEvent(ResourceCreatedEvent resourceCriatedEvent) {
-		HttpServletResponse response = resourceCriatedEvent.getResponse();
-		Long code = resourceCriatedEvent.getcode();
+	public void onApplicationEvent(ResourceCreatedEvent resourceCreatedEvent) {
+		HttpServletResponse response = resourceCreatedEvent.getResponse();
+		Long code = resourceCreatedEvent.getCode();
 		
 		addHeaderLocation(response, code);
 	}
