@@ -4,8 +4,8 @@ create table card (
 	active boolean not null,
 	balance decimal(10.2) not null,
 	customer_id bigint not null,
-    KEY customer_ind (customer_id),
-    CONSTRAINT card_fk foreign key (customer_id)
+    KEY customer_id (customer_id),
+    CONSTRAINT card_customer_fk foreign key (customer_id)
     references customer (id_customer)
 )engine=InnoDB default charset=UTF8MB4;
 
@@ -14,3 +14,4 @@ insert into card (card_number, active, balance, customer_id) values("72943883066
 insert into card (card_number, active, balance, customer_id) values("7145393493136287", true, 0.0, 3);
 insert into card (card_number, active, balance, customer_id) values("7932812411723048", true, 530.0, 4);
 insert into card (card_number, active, balance, customer_id) values("7242457894562268", true, 50.0, 5);
+insert into card (card_number, active, balance, customer_id) values("7234563494564456", true, 2350.0, 3);
