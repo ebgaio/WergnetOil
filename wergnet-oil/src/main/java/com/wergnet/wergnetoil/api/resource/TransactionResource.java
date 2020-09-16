@@ -75,7 +75,7 @@ public class TransactionResource {
     
 //    @PostMapping(value = ("/{customer}"), params = {"bank", "card"} )
 //    public ResponseEntity<Transaction> create1(@Valid @RequestBody Transaction transaction, @PathVariable Long customer, @RequestParam Long bank, @RequestParam Long card, HttpServletResponse response) {
-    // Create transaction by customer and bank
+    // Create transaction by customer and a bank
     @PostMapping(params = { "customer", "bank"})
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
       public ResponseEntity<Transaction> create(
