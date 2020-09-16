@@ -1,5 +1,6 @@
 package com.wergnet.wergnetoil.api.resource;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -87,6 +88,9 @@ public class CustomerResource {
 		Card card = new Card();
 		card.setCardNumber(cardNumber);
 		card.setCustomer(customerSaved.get());
+		card.setActive(true);
+		card.setBalance(new BigDecimal(0));
+		cardRepository.save(card);
 		return ResponseEntity.status(HttpStatus.CREATED).body(card);
 	}
 
