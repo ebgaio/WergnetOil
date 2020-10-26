@@ -1,10 +1,7 @@
 package com.wergnet.wergnetoil.api.exceptionHandler;
 
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.Arrays;
 import java.util.List;
-
-import javax.validation.ConstraintViolationException;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +29,7 @@ public class WergnetOilExceptionHandler extends ResponseEntityExceptionHandler{
 		String userMessage = messageSource.getMessage("resource.not-found", null, LocaleContextHolder.getLocale());
 		String developerMessage = ex.toString();
 
-		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
+		List<Erro> errors = Arrays.asList(new Erro(userMessage, developerMessage));
 		
 		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
 	}
@@ -42,16 +39,16 @@ public class WergnetOilExceptionHandler extends ResponseEntityExceptionHandler{
 		String userMessage = messageSource.getMessage("resource.operation-not-allowed", null, LocaleContextHolder.getLocale());
 		String developerMessage = ExceptionUtils.getRootCauseMessage(ex);
 	
-		List<Error> errors = Arrays.asList(new Error(userMessage, developerMessage));
+		List<Erro> errors = Arrays.asList(new Erro(userMessage, developerMessage));
 		return handleExceptionInternal(ex, errors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 	
-	public static class Error {
+	public static class Erro {
 		
 		private String userMessage;
 		private String developerMessage;
 		
-		public Error(String userMessage, String developerMessage) {
+		public Erro(String userMessage, String developerMessage) {
 			this.userMessage = userMessage;
 			this.developerMessage = developerMessage;
 		}
