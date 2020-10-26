@@ -48,14 +48,14 @@ public class CardResource {
 	@Autowired
 	private CardNumberGenerator randomCreditCardNumberGenerator;
 	
-	// List all Cards
+	// List all Cards | localhost:8080/cards
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CARD') and #oauth2.hasScope('read')")
 	public List<Card> listAll() {
 		return cardRepository.findAll();
 	}
 	
-	// Create new card to a specific customerId
+	// Create new card to a specific customerId | localhost:8080/cards/5
 	@PostMapping("/{customerId}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CARD') and #oauth2.hasScope('write')")
 	public ResponseEntity<Card> createCard(@Valid @RequestBody Card card, @PathVariable Long customerId, HttpServletResponse response) {
@@ -69,7 +69,7 @@ public class CardResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(cardSave);
 	}
 
-	// Show card by a code
+	// Show card by a code | localhost:8080/cards/4
 	@GetMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CARD') and #oauth2.hasScope('read')")
 	public ResponseEntity<Card> getByCode(@PathVariable Long code, HttpServletResponse response) {
@@ -78,7 +78,7 @@ public class CardResource {
 		return ResponseEntity.status(HttpStatus.OK).body(card);
 	}
 	
-	// Delete a card by code 
+	// Delete a card by code | localhost:8080/cards/6
 	@DeleteMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REMOVE_CARD') and #oauth2.hasScope('delete')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
@@ -86,7 +86,7 @@ public class CardResource {
 		cardRepository.deleteById(code);
 	}
 	
-	// Update card to specific code - Active true/false
+	// Update card to specific code - Active true/false | localhost:8080/customers/5/active
 	@PutMapping("/{code}/active")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CARD') and #oauth2.hasScope('update')")

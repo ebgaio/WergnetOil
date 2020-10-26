@@ -28,6 +28,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryQuery{
 	@PersistenceContext
 	private EntityManager manager;
 	
+	// Show transactions unique/limited by date
 	@Override
 	public Page<Transaction> filter(TransactionFilter transactionFilter, Pageable pageable) {
 		CriteriaBuilder builder = manager.getCriteriaBuilder();
@@ -44,6 +45,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryQuery{
 		return new PageImpl<>(query.getResultList(), pageable, total(transactionFilter));
 	}
 	
+	//Get a summarized values of transaction
 	@Override
 	public Page<TransactionSummary> summarize(TransactionFilter transactionFilter, Pageable pageable) {
 		
@@ -54,7 +56,7 @@ public class TransactionRepositoryImpl implements TransactionRepositoryQuery{
 		criteria.select(builder.construct(TransactionSummary.class
 				, root.get(Transaction_.id)
 				, root.get(Transaction_.description)
-				, root.get(Transaction_.balanceCard)
+				, root.get(Transaction_.valueTransaction)
 				, root.get(Transaction_.dateCredit)
 				, root.get(Transaction_.dateDebit) 
 				, root.get(Transaction_.customer).get(Customer_.nameCustomer)

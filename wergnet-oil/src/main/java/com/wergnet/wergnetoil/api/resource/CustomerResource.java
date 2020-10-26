@@ -49,14 +49,14 @@ public class CustomerResource {
 	@Autowired
 	private CardNumberGenerator randomCreditCardNumberGenerator;
 	
-	// List all Customers
+	// List all Customers | localhost:8080/customers
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
 	public List<Customer> listAll() {
 		return customerRepository.findAll();
 	}
 
-	// Create a new Customer
+	// Create a new Customer | localhost:8080/customers
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer, HttpServletResponse response) {
@@ -66,8 +66,10 @@ public class CustomerResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(customerSave);
 	}
 	
-	// Create new Customer with a specific codeCard
-//	@PostMapping(value = "/{codeCard}", params = "asdf")
+	/* Use with alternate option to create a customer with card:
+	 * @PostMapping(value = "/{codeCard}", params = "asdf")
+	 */
+	// Create new Customer with a specific codeCard | localhost:8080/customers/4
 	@PostMapping("/{codeCard}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Card> createCustomerWithCard(@Valid @RequestBody Customer customer, @PathVariable Long codeCard, HttpServletResponse response) {
@@ -79,7 +81,7 @@ public class CustomerResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(cardSave.get());
 	}
 	
-	// Create new Card to a specific codeCustomer
+	// Create new Card to a specific codeCustomer | localhost:8080/customers/card/4
 	@PostMapping("/card/{codeCustomer}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Card> createNewCardToCustomer(@RequestBody Customer codeCustomer, HttpServletResponse response) {
@@ -94,7 +96,7 @@ public class CustomerResource {
 		return ResponseEntity.status(HttpStatus.CREATED).body(card);
 	}
 
-	// Show customer by code
+	// Show customer by code | localhost:8080/customers/2
 	@GetMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
 	public ResponseEntity<Customer> getByCode(@PathVariable Long code) {
@@ -105,7 +107,7 @@ public class CustomerResource {
 //		return ResponseEntity.of(customer);
 	}
 
-	// Delete customer by code
+	// Delete customer by code | localhost:8080/customers/3
 	@DeleteMapping("/{code}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_REMOVE_CUSTOMER') and #oauth2.hasScope('delete')")
@@ -113,7 +115,7 @@ public class CustomerResource {
 		customerRepository.deleteById(code);
 	}
 	
-	// Update customer to a specific code
+	// Update customer to a specific code | localhost:8080/customers/5
 	@PutMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	public ResponseEntity<Customer> update(@PathVariable Long code, @Valid @RequestBody Customer customer) {
@@ -121,7 +123,7 @@ public class CustomerResource {
 		return ResponseEntity.ok(customerSave);
 	}
 	
-	// Update customer to specific code - Active true/false
+	// Update customer to specific code - Active true/false | localhost:8080/customers/2/active
 	@PutMapping("/{code}/active")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)

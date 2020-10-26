@@ -7,17 +7,17 @@ public class TransactionSummary {
 	
     public Long id;
     private String description;
-    private BigDecimal balanceCard;
+    private BigDecimal valueTransaction;
     private LocalDate dateCredit;
     private LocalDate dateDebit;
 	public String customer;
     public String bank;
     
-	public TransactionSummary(Long id, String description, BigDecimal balanceCard, LocalDate dateCredit,
+	public TransactionSummary(Long id, String description, BigDecimal valueTransaction, LocalDate dateCredit,
 			LocalDate dateDebit, String customer, String bank) {
 		this.id = id;
 		this.description = description;
-		this.balanceCard = balanceCard;
+		this.valueTransaction = valueTransaction;
 		this.dateCredit = dateCredit;
 		this.dateDebit = dateDebit;
 		this.customer = customer;
@@ -40,12 +40,12 @@ public class TransactionSummary {
 		this.description = description;
 	}
 
-	public BigDecimal getBalanceCard() {
-		return balanceCard;
+	public BigDecimal getValueTransaction() {
+		return valueTransaction;
 	}
 
-	public void setBalanceCard(BigDecimal balanceCard) {
-		this.balanceCard = balanceCard;
+	public void setValueTransaction(BigDecimal valueTransaction) {
+		this.valueTransaction = valueTransaction;
 	}
 
 	public LocalDate getDateCredit() {

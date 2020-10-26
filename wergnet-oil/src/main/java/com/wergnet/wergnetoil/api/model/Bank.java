@@ -14,17 +14,17 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "bank")
-@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
+//@JsonIdentityInfo(generator=ObjectIdGenerators.PropertyGenerator.class, property="id")
 public class Bank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_bank")
-    public Long id;
+    private Long id;
 
-    public String name;
-    public Long number;
-    public boolean active;
+    private String name;
+    private Long number;
+    private boolean active;
 
     public Long getId() {
         return id;

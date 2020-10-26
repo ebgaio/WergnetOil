@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 @Entity
 @Table(name = "transaction")
 public class Transaction {
@@ -20,23 +22,30 @@ public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_transaction")
-    public Long id;
+    private Long id;
 
     private String description;
-    private BigDecimal balanceCard;
+    private BigDecimal valueTransaction;
     
+//	@NotNull
+	@Column(name = "date_Credit")
+//	@JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate dateCredit;
-    private LocalDate dateDebit;
+
+//	@NotNull
+	@Column(name = "date_Debit")
+//	@JsonFormat(pattern = "yyyy/MM/dd")
+	private LocalDate dateDebit;
     
     @NotNull
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
-    public Customer customer;
+    private Customer customer;
 
     @NotNull
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
-    public Bank bank;
+    private Bank bank;
     
     public Long getId() {
     	return id;
@@ -54,12 +63,12 @@ public class Transaction {
     	this.description = description;
     }
     
-    public BigDecimal getBalanceCard() {
-    	return balanceCard;
+    public BigDecimal getValueTransaction() {
+    	return valueTransaction;
     }
     
-    public void setBalanceCard(BigDecimal balanceCard) {
-    	this.balanceCard = balanceCard;
+    public void setValueTransaction(BigDecimal valueTransaction) {
+    	this.valueTransaction = valueTransaction;
     }
     
     public LocalDate getDateCredit() {
