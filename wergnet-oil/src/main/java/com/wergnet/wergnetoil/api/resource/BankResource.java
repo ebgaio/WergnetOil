@@ -55,12 +55,6 @@ public class BankResource {
     	Bank bankSaved = bankRepository.save(bank);
     	publisher.publishEvent(new ResourceCreatedEvent(this, response, bankSaved.getId()));
     	
-//    	List<Bank> hasBank = bankRepository.getBank(bankSaved);
-//    	if (hasBank.isEmpty()) {
-//    		System.out.println("Nao existe o banco");
-////        	bankRepository.save(bank);
-//    	}
-
     	return ResponseEntity.status(HttpStatus.CREATED).body(bankSaved); 
     }
     

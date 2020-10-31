@@ -101,10 +101,7 @@ public class CustomerResource {
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
 	public ResponseEntity<Customer> getByCode(@PathVariable Long code) {
 		Optional<Customer> customer = this.customerRepository.findById(code);
-//		List<Card> card = this.cardRepository.getCardsByCustomer(code);
-//		customer.get().setCards(card);
 		return customer.isPresent() ? ResponseEntity.ok(customer.get()) : ResponseEntity.notFound().build();
-//		return ResponseEntity.of(customer);
 	}
 
 	// Delete customer by code | localhost:8080/customers/3

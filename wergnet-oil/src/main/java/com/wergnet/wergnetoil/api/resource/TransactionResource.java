@@ -78,6 +78,15 @@ public class TransactionResource {
         return transactionRepository.summarize(transactionFilter, pageable);
     }
     
+    // Show transaction by code | localhost:8080/transactions/2
+    @GetMapping("/{code}")
+    @PreAuthorize("hasAuthority('ROLE_SEARCH_TRANSACTION') and #oauth2.hasScope('read')")
+    public ResponseEntity<Transaction> getByCode(@PathVariable Long code) {
+    	
+    	Optional<Transaction> transaction = this.transactionRepository.findById(code); 
+    	return transaction.isPresent() ? ResponseEntity.ok(transaction.get()) : ResponseEntity.notFound().build();
+    }
+    
     // Create transaction | localhost:8080/transactions
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
@@ -88,7 +97,7 @@ public class TransactionResource {
     	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
     }
     
-	/* Use of alternate option of @PostMapping : 
+	/* Use of alternative option of @PostMapping : 
 	 * @PostMapping(value = ("/{customer}"), params = {"bank", "card"} )
 	 * public ResponseEntity<Transaction> create(@Valid @RequestBody Transaction transaction, @PathVariable Long customer, @RequestParam Long bank, @RequestParam Long card, HttpServletResponse response) { 
 	 */
@@ -106,15 +115,6 @@ public class TransactionResource {
     	
     	publisher.publishEvent(new ResourceCreatedEvent(this, response, transactionSaved.getId()));
     	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
-    }
-    
-    // Show transaction by code | localhost:8080/transactions/2
-    @GetMapping("/{code}")
-    @PreAuthorize("hasAuthority('ROLE_SEARCH_TRANSACTION') and #oauth2.hasScope('read')")
-    public ResponseEntity<Transaction> getByCode(@PathVariable Long code) {
-
-    	Optional<Transaction> transaction = this.transactionRepository.findById(code); 
-    	return transaction.isPresent() ? ResponseEntity.ok(transaction.get()) : ResponseEntity.notFound().build();
     }
     
     // Create transaction for to debit value in card of customer | localhost:8080/transactions?value=20&card=2
@@ -138,7 +138,7 @@ public class TransactionResource {
 
 //    @PostMapping(params = {"value", "card"}) //("/{code}/active")
 //    @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
-//    public ResponseEntity<Transaction> getMoneyToCard() {
+//    public ResponseEntity<Transaction> getMoneyFromCard() {
 //    	
 //    	
 //    	return null;
