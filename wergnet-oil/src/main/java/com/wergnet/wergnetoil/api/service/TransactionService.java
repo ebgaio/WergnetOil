@@ -2,6 +2,7 @@ package com.wergnet.wergnetoil.api.service;
 
 import java.math.BigDecimal;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +14,9 @@ import com.wergnet.wergnetoil.api.model.Bank;
 import com.wergnet.wergnetoil.api.model.Card;
 import com.wergnet.wergnetoil.api.model.Customer;
 import com.wergnet.wergnetoil.api.model.Transaction;
+import com.wergnet.wergnetoil.api.repository.BankRepository;
 import com.wergnet.wergnetoil.api.repository.CardRepository;
+import com.wergnet.wergnetoil.api.repository.CustomerRepository;
 import com.wergnet.wergnetoil.api.repository.TransactionRepository;
 import com.wergnet.wergnetoil.api.service.exception.BankNotFoundOrInactiveException;
 import com.wergnet.wergnetoil.api.service.exception.CustomerNotFoundOrInactiveException;
@@ -34,6 +37,12 @@ public class TransactionService {
 	@Autowired
 	private CardRepository cardRepository;
 	
+    @Autowired
+    private CustomerRepository customerRepository;
+    
+    @Autowired
+    private BankRepository bankRepository;
+	
 	@Transactional
 	public Transaction save(@Valid Transaction transaction) {
 		
@@ -51,6 +60,18 @@ public class TransactionService {
 		return transaction;
 	}
 
+	public Transaction createTransactionByCustomerByBank(Transaction transaction, Long customer, Long bank,
+			HttpServletResponse response) {
+		Customer customerSave = this.customerRepository.findById(customer).orElseThrow(() -> new EmptyResultDataAccessException(1));
+    	Bank bankSave = this.bankRepository.findById(bank).orElseThrow(() -> new EmptyResultDataAccessException(1));
+    	
+    	transaction.setCustomer(customerSave);
+    	transaction.setBank(bankSave);
+    	Transaction transactionSaved = transactionRepository.save(transaction);
+    	
+		return transactionSaved;
+	}
+	
 	@Transactional
 	public Transaction buyCreditToCard(Transaction transaction, BigDecimal value, Long card) {
 

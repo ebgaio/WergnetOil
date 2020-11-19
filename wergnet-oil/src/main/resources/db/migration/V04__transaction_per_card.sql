@@ -6,7 +6,7 @@ CREATE TABLE TRANSACTION (
 	date_Debit DATE,
 	customer_id BIGINT NOT NULL,
    	KEY customer_id (customer_id),
-   	bank_id BIGINT NOT NULL,
+   	bank_id BIGINT,
    	KEY bank_id (bank_id),
     CONSTRAINT customer_transaction_fk FOREIGN KEY (customer_id)
     REFERENCES customer (id_customer),

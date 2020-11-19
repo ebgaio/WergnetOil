@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -29,11 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.api.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.api.exceptionHandler.WergnetOilExceptionHandler.Erro;
-import com.wergnet.wergnetoil.api.model.Bank;
-import com.wergnet.wergnetoil.api.model.Customer;
 import com.wergnet.wergnetoil.api.model.Transaction;
-import com.wergnet.wergnetoil.api.repository.BankRepository;
-import com.wergnet.wergnetoil.api.repository.CustomerRepository;
 import com.wergnet.wergnetoil.api.repository.TransactionRepository;
 import com.wergnet.wergnetoil.api.repository.filter.TransactionFilter;
 import com.wergnet.wergnetoil.api.repository.projection.TransactionSummary;
@@ -53,12 +48,6 @@ public class TransactionResource {
     @Autowired
     private ApplicationEventPublisher publisher;
     
-    @Autowired
-    private CustomerRepository customerRepository;
-    
-    @Autowired
-    private BankRepository bankRepository;
-
     @Autowired
     private MessageSource messageSource;
     
@@ -87,7 +76,7 @@ public class TransactionResource {
     	return transaction.isPresent() ? ResponseEntity.ok(transaction.get()) : ResponseEntity.notFound().build();
     }
     
-    // Create transaction | localhost:8080/transactions
+    // Test - Create transaction | localhost:8080/transactions
     @PostMapping
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
     public ResponseEntity<Transaction> create(@Valid @RequestBody Transaction transaction, HttpServletResponse response) {
@@ -98,26 +87,20 @@ public class TransactionResource {
     }
     
 	/* Use of alternative option of @PostMapping : 
-	 * @PostMapping(value = ("/{customer}"), params = {"bank", "card"} )
-	 * public ResponseEntity<Transaction> create(@Valid @RequestBody Transaction transaction, @PathVariable Long customer, @RequestParam Long bank, @RequestParam Long card, HttpServletResponse response) { 
+	 * @PostMapping(value = ("/{customer}"), params = {"bank"} )
+	 * public ResponseEntity<Transaction> createTransactionByCustomerByBank(@Valid @RequestBody Transaction transaction, @PathVariable Long customer, @RequestParam Long bank, HttpServletResponse response) { 
 	 */
     // Create transaction by customer and a bank | localhost:8080/transactions?customer=1&bank=2
     @PostMapping(params = { "customer", "bank"})
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
-    public ResponseEntity<Transaction> create(@Valid @RequestBody Transaction transaction, @RequestParam Long customer, @RequestParam Long bank, HttpServletResponse response) {
+    public ResponseEntity<Transaction> createTransactionByCustomerByBank(@Valid @RequestBody Transaction transaction, @RequestParam Long customer, @RequestParam Long bank, HttpServletResponse response) {
 
-    	Customer customerSave = this.customerRepository.findById(customer).orElseThrow(() -> new EmptyResultDataAccessException(1));
-    	Bank bankSave = this.bankRepository.findById(bank).orElseThrow(() -> new EmptyResultDataAccessException(1));
-    	
-    	transaction.setCustomer(customerSave);
-    	transaction.setBank(bankSave);
-    	Transaction transactionSaved = transactionRepository.save(transaction);
-    	
+    	Transaction transactionSaved = transactionService.createTransactionByCustomerByBank(transaction, customer, bank, response);
     	publisher.publishEvent(new ResourceCreatedEvent(this, response, transactionSaved.getId()));
     	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
     }
     
-    // Create transaction for to debit value in card of customer | localhost:8080/transactions?value=20&card=2
+    // Create transaction to value of debit in card of customer. Using default Bank. Id: 1 | localhost:8080/transactions?value=20&card=2
     @PostMapping(params = {"value", "card"})
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
     public ResponseEntity<Transaction> buyCreditToCard(@Valid @RequestBody Transaction transaction, @RequestParam BigDecimal value, @RequestParam Long card, HttpServletResponse response) {

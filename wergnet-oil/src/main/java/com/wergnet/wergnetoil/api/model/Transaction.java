@@ -13,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 @Entity
 @Table(name = "transaction")
 public class Transaction {
@@ -27,14 +25,10 @@ public class Transaction {
     private String description;
     private BigDecimal valueTransaction;
     
-//	@NotNull
 	@Column(name = "date_Credit")
-//	@JsonFormat(pattern = "yyyy/MM/dd")
     private LocalDate dateCredit;
-
-//	@NotNull
+	
 	@Column(name = "date_Debit")
-//	@JsonFormat(pattern = "yyyy/MM/dd")
 	private LocalDate dateDebit;
     
     @NotNull
@@ -42,7 +36,6 @@ public class Transaction {
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
