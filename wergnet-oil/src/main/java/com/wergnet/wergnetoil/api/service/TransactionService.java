@@ -43,7 +43,7 @@ public class TransactionService {
     @Autowired
     private BankRepository bankRepository;
 	
-	@Transactional
+//	@Transactional
 	public Transaction save(@Valid Transaction transaction) {
 		
 		Customer customerSaved =  this.customerService.getCustomerByCode(transaction.getCustomer().getId());
@@ -60,9 +60,11 @@ public class TransactionService {
 		return transaction;
 	}
 
-	public Transaction createTransactionByCustomerByBank(Transaction transaction, Long customer, Long bank,
-			HttpServletResponse response) {
-		Customer customerSave = this.customerRepository.findById(customer).orElseThrow(() -> new EmptyResultDataAccessException(1));
+	public Transaction buyCreditToCardFromBank(Transaction transaction, Long bank, HttpServletResponse response) {
+		
+		Long customerId = transaction.getCustomer().getId();
+
+		Customer customerSave = this.customerRepository.findById(customerId).orElseThrow(() -> new EmptyResultDataAccessException(1));
     	Bank bankSave = this.bankRepository.findById(bank).orElseThrow(() -> new EmptyResultDataAccessException(1));
     	
     	transaction.setCustomer(customerSave);
@@ -72,22 +74,23 @@ public class TransactionService {
 		return transactionSaved;
 	}
 	
-	@Transactional
-	public Transaction buyCreditToCard(Transaction transaction, BigDecimal value, Long card) {
+//	@Transactional
+	public Transaction debitInCardOfCustomer(Transaction transaction, BigDecimal valueDebit) {
+		
+		Long card = transaction.getCard().getId();
 
     	Card cardOfCustomer = this.cardRepository.findById(card).orElseThrow(() -> new EmptyResultDataAccessException(1));
     	
-    	int r = cardOfCustomer.getBalance().compareTo(value);
-    	if (r == 0 || r == 1) {
-    		BigDecimal valueActual = cardOfCustomer.getBalance().subtract(value);
+    	int r = cardOfCustomer.getBalance().compareTo(valueDebit);
+    	if (r != -1) {
+    		BigDecimal valueActual = cardOfCustomer.getBalance().subtract(valueDebit);
     		cardOfCustomer.setBalance(valueActual);  // The balance is equal or greater that value
 		} else { 
-			if (r == -1) {
-				throw new InsufficientFundsInCardException();
-			}
+			throw new InsufficientFundsInCardException();
 		}
     	cardRepository.save(cardOfCustomer);
-    	transaction.setValueTransaction(value);
+    	transaction.setCard(cardOfCustomer);
+    	transaction.setValueTransaction(valueDebit);
     	transaction = bankService.defaultBank(transaction);
     	transactionRepository.save(transaction);
 

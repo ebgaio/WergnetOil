@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,14 +24,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.api.event.ResourceCreatedEvent;
 import com.wergnet.wergnetoil.api.model.Bank;
-import com.wergnet.wergnetoil.api.model.Customer;
 import com.wergnet.wergnetoil.api.repository.BankRepository;
 import com.wergnet.wergnetoil.api.service.BankService;
 
 @RestController
 @RequestMapping("/banks")
 public class BankResource {
-
+    
     @Autowired
     private BankRepository bankRepository;
     
@@ -44,33 +44,36 @@ public class BankResource {
     @GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_BANK') and #oauth2.hasScope('read')")
     public List<Bank> listAll() {
-        return bankRepository.findAll();
-    }
-    
-    // Create a bank in the system  localhost:8080/banks
-    @PostMapping
-    @PreAuthorize("hasAuthority('ROLE_SEARCH_BANK') and #oauth2.hasScope('write')")
-    public ResponseEntity<Bank> createBank(@Valid @RequestBody Bank bank, HttpServletResponse response) {
-    	
-    	Bank bankSaved = bankRepository.save(bank);
-    	publisher.publishEvent(new ResourceCreatedEvent(this, response, bankSaved.getId()));
-    	
-    	return ResponseEntity.status(HttpStatus.CREATED).body(bankSaved); 
+
+    	return bankRepository.findAll();
     }
     
 	// Show bank by code | localhost:8080/banks/2
 	@GetMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
 	public ResponseEntity<Bank> getByCode(@PathVariable Long code) {
-		Optional<Bank> bank = this.bankRepository.findById(code);
+		
+		Optional<Bank> bank = bankRepository.findById(code);
 		return bank.isPresent() ? ResponseEntity.ok(bank.get()) : ResponseEntity.notFound().build();
 	}
 
+	// Create a bank in the system  localhost:8080/banks
+	@PostMapping
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_BANK') and #oauth2.hasScope('write')")
+	public ResponseEntity<Bank> createBank(@Valid @RequestBody Bank bank, HttpServletResponse response) {
+		
+		Bank bankSaved = bankRepository.save(bank);
+		publisher.publishEvent(new ResourceCreatedEvent(this, response, bankSaved.getId()));
+		
+		return ResponseEntity.status(HttpStatus.CREATED).body(bankSaved); 
+	}
+	
 	// Delete bank by code | localhost:8080/banks/3
 	@DeleteMapping("/{code}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_REMOVE_CUSTOMER') and #oauth2.hasScope('delete')")
 	public void delete(@PathVariable Long code) {
+		
 		bankRepository.deleteById(code);
 	}
 	
@@ -78,7 +81,9 @@ public class BankResource {
 	@PutMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	public ResponseEntity<Bank> update(@PathVariable Long code, @Valid @RequestBody Bank bank) {
+		
 		Bank bankSave = bankService.update(code, bank);
+		
 		return ResponseEntity.ok(bankSave);
 	}
 	
@@ -87,6 +92,7 @@ public class BankResource {
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updatePropertyActive(@PathVariable Long code, @RequestBody Boolean active) {
+		
 		bankService.updatePropertyActive(code, active);
 	}
 }

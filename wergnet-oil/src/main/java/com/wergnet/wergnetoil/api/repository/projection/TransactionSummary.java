@@ -12,9 +12,10 @@ public class TransactionSummary {
     private LocalDate dateDebit;
 	public String customer;
     public String bank;
+    public String card;
     
 	public TransactionSummary(Long id, String description, BigDecimal valueTransaction, LocalDate dateCredit,
-			LocalDate dateDebit, String customer, String bank) {
+			LocalDate dateDebit, String customer, String bank, String card) {
 		this.id = id;
 		this.description = description;
 		this.valueTransaction = valueTransaction;
@@ -22,6 +23,7 @@ public class TransactionSummary {
 		this.dateDebit = dateDebit;
 		this.customer = customer;
 		this.bank = bank;
+		this.card = card;
 	}
 
 	public Long getId() {
@@ -80,4 +82,11 @@ public class TransactionSummary {
 		this.bank = bank;
 	}
     
+	public String getCard() {
+		return card;
+	}
+
+	public void setCard(String card) {
+		this.card = card;
+	}
 }

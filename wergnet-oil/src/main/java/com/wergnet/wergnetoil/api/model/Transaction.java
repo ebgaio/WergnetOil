@@ -39,8 +39,12 @@ public class Transaction {
     @ManyToOne
     @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
-    
-    public Long getId() {
+
+    @ManyToOne
+    @JoinColumn(name = "card_id", nullable = false)
+    private Card card;
+
+	public Long getId() {
     	return id;
     }
     
@@ -94,6 +98,14 @@ public class Transaction {
 
     public void setBank(Bank bank) {
         this.bank = bank;
+    }
+    
+    public Card getCard() {
+    	return card;
+    }
+    
+    public void setCard(Card card) {
+    	this.card = card;
     }
 
 	@Override

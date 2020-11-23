@@ -46,20 +46,29 @@ public class CustomerResource {
 	@Autowired
 	private CustomerService customerService;
 	
-	@Autowired
-	private CardNumberGenerator randomCreditCardNumberGenerator;
-	
 	// List all Customers | localhost:8080/customers
 	@GetMapping
 	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
 	public List<Customer> listAll() {
+		
 		return customerRepository.findAll();
+	}
+	
+	// Show customer by code | localhost:8080/customers/2
+	@GetMapping("/{code}")
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
+	public ResponseEntity<Customer> getByCode(@PathVariable Long code) {
+		
+		Optional<Customer> customer = this.customerRepository.findById(code);
+		
+		return customer.isPresent() ? ResponseEntity.ok(customer.get()) : ResponseEntity.notFound().build();
 	}
 
 	// Create a new Customer | localhost:8080/customers
 	@PostMapping
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Customer> create(@Valid @RequestBody Customer customer, HttpServletResponse response) {
+		
 		Customer customerSave =  customerRepository.save(customer);
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, customerSave.getId()));
 		
@@ -73,11 +82,16 @@ public class CustomerResource {
 	@PostMapping("/{codeCard}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Card> createCustomerWithCard(@Valid @RequestBody Customer customer, @PathVariable Long codeCard, HttpServletResponse response) {
+		
 		Customer customerSave = customerRepository.save(customer);
 		Optional<Card> cardSave = cardRepository.findById(codeCard);
+
 		cardSave.get().setCustomer(customerSave);
 		cardRepository.save(cardSave.get());
+		
 		publisher.publishEvent(new ResourceCreatedEvent(this, response, customerSave.getId()));
+		publisher.publishEvent(new ResourceCreatedEvent(this, response, cardSave.get().getId()));
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(cardSave.get());
 	}
 	
@@ -85,23 +99,10 @@ public class CustomerResource {
 	@PostMapping("/card/{codeCustomer}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
 	public ResponseEntity<Card> createNewCardToCustomer(@RequestBody Customer codeCustomer, HttpServletResponse response) {
-		String cardNumber = randomCreditCardNumberGenerator.generateNumber();
-		Optional<Customer> customerSaved = customerRepository.findById(codeCustomer.getId());
-		Card card = new Card();
-		card.setCardNumber(cardNumber);
-		card.setCustomer(customerSaved.get());
-		card.setActive(true);
-		card.setBalance(new BigDecimal(0));
-		cardRepository.save(card);
+		
+		Card card = customerService.createNewCardToCustomer(codeCustomer);
+				
 		return ResponseEntity.status(HttpStatus.CREATED).body(card);
-	}
-
-	// Show customer by code | localhost:8080/customers/2
-	@GetMapping("/{code}")
-	@PreAuthorize("hasAuthority('ROLE_SEARCH_CUSTOMER') and #oauth2.hasScope('read')")
-	public ResponseEntity<Customer> getByCode(@PathVariable Long code) {
-		Optional<Customer> customer = this.customerRepository.findById(code);
-		return customer.isPresent() ? ResponseEntity.ok(customer.get()) : ResponseEntity.notFound().build();
 	}
 
 	// Delete customer by code | localhost:8080/customers/3
@@ -109,6 +110,7 @@ public class CustomerResource {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@PreAuthorize("hasAuthority('ROLE_REMOVE_CUSTOMER') and #oauth2.hasScope('delete')")
 	public void delete(@PathVariable Long code) {
+		
 		customerRepository.deleteById(code);
 	}
 	
@@ -116,7 +118,9 @@ public class CustomerResource {
 	@PutMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	public ResponseEntity<Customer> update(@PathVariable Long code, @Valid @RequestBody Customer customer) {
+		
 		Customer customerSave = customerService.update(code, customer);
+		
 		return ResponseEntity.ok(customerSave);
 	}
 	
@@ -125,6 +129,7 @@ public class CustomerResource {
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void updatePropertyActive(@PathVariable Long code, @RequestBody Boolean active) {
+		
 		customerService.updatePropertyActive(code, active);
 	}
 	

@@ -31,7 +31,7 @@ public class BankRepositoryImpl implements BankRepositoryQuery {
 		return query.getResultList();
 	}
 
-	private Predicate[] creatingRestrictions(Bank bank, CriteriaBuilder builder, Root root) {
+	private Predicate[] creatingRestrictions(Bank bank, CriteriaBuilder builder, Root<Bank> root) {
 		List<Predicate> predicates = new ArrayList<>();
 		predicates.add(builder.equal(root.get("name"), bank.getName()));
 		predicates.add(builder.equal(root.get("number"), bank.getNumber()));

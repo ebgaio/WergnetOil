@@ -66,6 +66,14 @@ public class TransactionResource {
     	
         return transactionRepository.summarize(transactionFilter, pageable);
     }
+
+    // Get a statement of Debit by Customer | localhost:8080/transactions/statement/3
+    @GetMapping("/statement/{customer}")
+	@PreAuthorize("hasAuthority('ROLE_SEARCH_TRANSACTION') and #oauth2.hasScope('read')")
+    public Page<Transaction> listDebitByCustomer(@PathVariable Long customer, Pageable pageable) {
+
+    	return transactionRepository.listDebitByCustomer(customer, pageable);
+    }
     
     // Show transaction by code | localhost:8080/transactions/2
     @GetMapping("/{code}")
@@ -90,22 +98,22 @@ public class TransactionResource {
 	 * @PostMapping(value = ("/{customer}"), params = {"bank"} )
 	 * public ResponseEntity<Transaction> createTransactionByCustomerByBank(@Valid @RequestBody Transaction transaction, @PathVariable Long customer, @RequestParam Long bank, HttpServletResponse response) { 
 	 */
-    // Create transaction by customer and a bank | localhost:8080/transactions?customer=1&bank=2
-    @PostMapping(params = { "customer", "bank"})
+    // Create transaction to buy credit to customer's card from a bank | localhost:8080/transactions?bank=2
+    @PostMapping(params = {"bank"})
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
-    public ResponseEntity<Transaction> createTransactionByCustomerByBank(@Valid @RequestBody Transaction transaction, @RequestParam Long customer, @RequestParam Long bank, HttpServletResponse response) {
+    public ResponseEntity<Transaction> createTransactionToBuyCreditToCardFromBank(@Valid @RequestBody Transaction transaction, @RequestParam Long bank, HttpServletResponse response) {
 
-    	Transaction transactionSaved = transactionService.createTransactionByCustomerByBank(transaction, customer, bank, response);
+    	Transaction transactionSaved = transactionService.buyCreditToCardFromBank(transaction, bank, response);
     	publisher.publishEvent(new ResourceCreatedEvent(this, response, transactionSaved.getId()));
     	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
     }
     
-    // Create transaction to value of debit in card of customer. Using default Bank. Id: 1 | localhost:8080/transactions?value=20&card=2
-    @PostMapping(params = {"value", "card"})
+    // Create transaction to debit of value in card of customer. Using default Bank. Id: 1 | localhost:8080/transactions?valueDebit=20
+    @PostMapping(params = {"valueDebit"})
     @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
-    public ResponseEntity<Transaction> buyCreditToCard(@Valid @RequestBody Transaction transaction, @RequestParam BigDecimal value, @RequestParam Long card, HttpServletResponse response) {
+    public ResponseEntity<Transaction> createTransactionDebitInCardOfCustomer(@Valid @RequestBody Transaction transaction, @RequestParam BigDecimal valueDebit, HttpServletResponse response) {
     	
-    	Transaction transactionSaved = transactionService.buyCreditToCard(transaction, value, card);
+    	Transaction transactionSaved = transactionService.debitInCardOfCustomer(transaction, valueDebit);
     	publisher.publishEvent(new ResourceCreatedEvent(this, response, transactionSaved.getId()));
     	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
     }
@@ -118,14 +126,5 @@ public class TransactionResource {
 		List<Erro> erros = Arrays.asList(new Erro(mesageUser, mesageDeveloper));
 		return ResponseEntity.badRequest().body(erros);
     }
-
-//    @PostMapping(params = {"value", "card"}) //("/{code}/active")
-//    @PreAuthorize("hasAuthority('ROLE_REGISTER_TRANSACTION') and #oauth2.hasScope('write')")
-//    public ResponseEntity<Transaction> getMoneyFromCard() {
-//    	
-//    	
-//    	return null;
-////    	return ResponseEntity.status(HttpStatus.CREATED).body(transactionSaved);
-//    }
 
 }
