@@ -28,6 +28,7 @@ public class Card {
 	private BigDecimal balance;
 	private boolean active;
 	
+	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;

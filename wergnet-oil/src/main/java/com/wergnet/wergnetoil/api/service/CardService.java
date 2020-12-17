@@ -1,5 +1,7 @@
 package com.wergnet.wergnetoil.api.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -28,8 +30,16 @@ public class CardService {
 	}
 
 	public Card getCardByCode(Long code) {
-		Card cardSave = this.cardRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
-		return cardSave;
+		
+//		Card cardSave = this.cardRepository.findById(code).orElseThrow(() -> new EmptyResultDataAccessException(1));
+		Optional<Card> cardSave = this.cardRepository.findById(code);
+		
+		if (cardSave.get() != null) {
+			return cardSave.get();
+		} else {
+			new EmptyResultDataAccessException(1);
+		}
+		return cardSave.get();
 	}
 	
 	public Card createCard(Card card, Long customerId) {
