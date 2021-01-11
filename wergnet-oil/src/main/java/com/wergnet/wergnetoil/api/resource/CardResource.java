@@ -25,8 +25,11 @@ import com.wergnet.wergnetoil.api.model.Card;
 import com.wergnet.wergnetoil.api.repository.CardRepository;
 import com.wergnet.wergnetoil.api.service.CardService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/cards")
+@Slf4j
 public class CardResource {
 
 	@Autowired

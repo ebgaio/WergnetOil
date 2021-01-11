@@ -35,8 +35,11 @@ import com.wergnet.wergnetoil.api.repository.projection.TransactionSummary;
 import com.wergnet.wergnetoil.api.service.TransactionService;
 import com.wergnet.wergnetoil.api.service.exception.InsufficientFundsInCardException;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/transactions")
+@Slf4j
 public class TransactionResource {
 
     @Autowired

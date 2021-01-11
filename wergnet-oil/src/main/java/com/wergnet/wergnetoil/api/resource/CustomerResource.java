@@ -30,8 +30,11 @@ import com.wergnet.wergnetoil.api.repository.CustomerRepository;
 import com.wergnet.wergnetoil.api.service.CardNumberGenerator;
 import com.wergnet.wergnetoil.api.service.CustomerService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/customers")
+@Slf4j
 public class CustomerResource {
 	
 	@Autowired

@@ -26,8 +26,11 @@ import com.wergnet.wergnetoil.api.model.Bank;
 import com.wergnet.wergnetoil.api.repository.BankRepository;
 import com.wergnet.wergnetoil.api.service.BankService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/banks")
+@Slf4j
 public class BankResource {
     
     @Autowired

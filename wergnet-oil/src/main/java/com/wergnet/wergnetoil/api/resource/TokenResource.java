@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.wergnet.wergnetoil.api.config.property.WergnetOilApiProperty;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("/tokens")
+@Slf4j
 public class TokenResource {
 
 	@Autowired
