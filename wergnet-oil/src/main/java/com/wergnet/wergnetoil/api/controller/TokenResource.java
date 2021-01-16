@@ -1,4 +1,4 @@
-package com.wergnet.wergnetoil.api.resource;
+package com.wergnet.wergnetoil.api.controller;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;

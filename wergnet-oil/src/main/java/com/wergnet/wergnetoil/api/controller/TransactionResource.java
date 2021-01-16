@@ -1,4 +1,4 @@
-package com.wergnet.wergnetoil.api.resource;
+package com.wergnet.wergnetoil.api.controller;
 
 import java.math.BigDecimal;
 import java.util.Arrays;

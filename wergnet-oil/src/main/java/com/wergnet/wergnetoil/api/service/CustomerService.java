@@ -33,7 +33,7 @@ public class CustomerService {
 		customerRepository.save(customerSave);
 	}
 
-	public Customer update(Long code, @Valid Customer customer) {
+	public Customer update(Long code, Customer customer) {
 		Customer customerSave = getCustomerByCode(code);
 		BeanUtils.copyProperties(customer, customerSave, "id", "cards");
 		return customerRepository.save(customerSave);

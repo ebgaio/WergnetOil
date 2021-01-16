@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -20,10 +23,24 @@ public class Customer {
 	@Column(name = "id_customer")
 	private Long id;
 	
+	@NotBlank
+	@Size(max = 30)
 	private String nameCustomer;
+	
+	@NotBlank
+	@Size(max = 30)
 	private String lastName;
+	
+	@NotBlank
 	private boolean active;
+	
+	@NotBlank
+	@Email
+	@Size(max = 50)
 	private String email;
+	
+	@NotBlank
+	@Size(max = 30)
 	private String phone;
 
 	@Embedded

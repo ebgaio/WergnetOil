@@ -1,4 +1,4 @@
-package com.wergnet.wergnetoil.api.resource;
+package com.wergnet.wergnetoil.api.controller;
 
 import java.util.List;
 import java.util.Optional;
@@ -82,7 +82,7 @@ public class BankResource {
 	// Update bank to a specific code | localhost:8080/banks/5
 	@PutMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
-	public ResponseEntity<Bank> update(@PathVariable Long code, @Valid @RequestBody Bank bank) {
+	public ResponseEntity<Bank> update(@Valid @RequestBody Bank bank, @PathVariable Long code) {
 		
 		Bank bankSave = bankService.update(code, bank);
 		

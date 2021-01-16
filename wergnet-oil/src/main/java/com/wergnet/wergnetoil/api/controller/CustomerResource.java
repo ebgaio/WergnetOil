@@ -1,6 +1,5 @@
-package com.wergnet.wergnetoil.api.resource;
+package com.wergnet.wergnetoil.api.controller;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,7 +26,6 @@ import com.wergnet.wergnetoil.api.model.Card;
 import com.wergnet.wergnetoil.api.model.Customer;
 import com.wergnet.wergnetoil.api.repository.CardRepository;
 import com.wergnet.wergnetoil.api.repository.CustomerRepository;
-import com.wergnet.wergnetoil.api.service.CardNumberGenerator;
 import com.wergnet.wergnetoil.api.service.CustomerService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -101,7 +99,7 @@ public class CustomerResource {
 	// Create new Card to a specific codeCustomer | localhost:8080/customers/card/4
 	@PostMapping("/card/{codeCustomer}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('write')")
-	public ResponseEntity<Card> createNewCardToCustomer(@RequestBody Customer codeCustomer, HttpServletResponse response) {
+	public ResponseEntity<Card> createNewCardToCustomer(@Valid @RequestBody Customer codeCustomer, HttpServletResponse response) {
 		
 		Card card = customerService.createNewCardToCustomer(codeCustomer);
 				
@@ -120,7 +118,7 @@ public class CustomerResource {
 	// Update customer to a specific code | localhost:8080/customers/5
 	@PutMapping("/{code}")
 	@PreAuthorize("hasAuthority('ROLE_REGISTER_CUSTOMER') and #oauth2.hasScope('update')")
-	public ResponseEntity<Customer> update(@PathVariable Long code, @Valid @RequestBody Customer customer) {
+	public ResponseEntity<Customer> update(@Valid @RequestBody Customer customer, @PathVariable Long code) {
 		
 		Customer customerSave = customerService.update(code, customer);
 		

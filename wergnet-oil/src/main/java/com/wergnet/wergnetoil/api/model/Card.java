@@ -12,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -24,8 +28,16 @@ public class Card {
 	@Column(name = "id_card")
 	private Long id;
 
+	@NotBlank
+	@Size(max = 20)
 	private String cardNumber;
+	
+	@NotBlank
+    @DecimalMin(value = "0.0", inclusive = false)
+    @Digits(integer=10, fraction=2)
 	private BigDecimal balance;
+	
+	@NotBlank
 	private boolean active;
 	
 	@JsonIgnore

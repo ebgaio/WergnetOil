@@ -11,7 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 @Table(name = "transaction")
@@ -22,7 +26,13 @@ public class Transaction {
     @Column(name = "id_transaction")
     private Long id;
 
+    @NotBlank(message = "Name cannot be null, blank and empty ")
+    @Size(max = 50)
     private String description;
+    
+    @NotBlank
+    @DecimalMin(value = "0.0", inclusive = false)
+    @Digits(integer=10, fraction=2)
     private BigDecimal valueTransaction;
     
 	@Column(name = "date_Credit")

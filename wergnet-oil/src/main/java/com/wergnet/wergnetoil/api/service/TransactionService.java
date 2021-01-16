@@ -78,8 +78,10 @@ public class TransactionService {
 	public Transaction debitInCardOfCustomer(Transaction transaction, BigDecimal valueDebit) {
 		
 		Long card = transaction.getCard().getId();
+		Long customer = transaction.getCustomer().getId();
 
     	Card cardOfCustomer = this.cardRepository.findById(card).orElseThrow(() -> new EmptyResultDataAccessException(1));
+    	Customer customerSaved = this.customerRepository.findById(customer).orElseThrow(() -> new EmptyResultDataAccessException(1));
     	
     	int r = cardOfCustomer.getBalance().compareTo(valueDebit);
     	if (r != -1) {
@@ -92,6 +94,7 @@ public class TransactionService {
     	transaction.setCard(cardOfCustomer);
     	transaction.setValueTransaction(valueDebit);
     	transaction = bankService.defaultBank(transaction);
+    	transaction.setCustomer(customerSaved);
     	transactionRepository.save(transaction);
 
     	return transaction;

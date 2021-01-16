@@ -7,6 +7,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -19,8 +21,14 @@ public class Bank {
     @Column(name = "id_bank")
     private Long id;
 
+    @NotBlank(message = "Name cannot be null")
+    @Size(max = 30)
     private String name;
+
+    @NotBlank
     private Long number;
+
+    @NotBlank
     private boolean active;
 
     public Long getId() {
