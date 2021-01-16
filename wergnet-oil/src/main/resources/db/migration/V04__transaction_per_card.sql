@@ -1,22 +1,23 @@
 CREATE TABLE TRANSACTION (
-    id_transaction BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGINT NOT NULL AUTO_INCREMENT,
     description VARCHAR(50) NOT NULL,
     value_Transaction DECIMAL(10,2) NOT NULL,
    	date_Credit DATE,
 	date_Debit DATE,
-	customer_id BIGINT NOT NULL,
-   	KEY customer_id (customer_id),
-   	bank_id BIGINT,
-   	KEY bank_id (bank_id),
-   	card_id BIGINT,
-   	KEY card_id (card_id),
-    CONSTRAINT customer_transaction_fk FOREIGN KEY (customer_id)
-    REFERENCES customer (id_customer),
-    CONSTRAINT bank_transaction_fk FOREIGN KEY (bank_id)
-    REFERENCES bank (id_bank),
-    CONSTRAINT card_transaction_fk FOREIGN KEY (card_id)
-    REFERENCES card (id_card)
+    customer_id BIGINT NOT NULL,
+    bank_id BIGINT,
+    card_id BIGINT,
+    PRIMARY KEY (id)
 )ENGINE=InnoDB DEFAULT CHARSET=UTF8MB4;
+
+ALTER TABLE TRANSACTION ADD CONSTRAINT customer_transaction_fk
+    FOREIGN KEY (customer_id) REFERENCES customer (id);
+
+ALTER TABLE TRANSACTION ADD CONSTRAINT bank_transaction_fk
+    FOREIGN KEY (bank_id) REFERENCES bank (id);
+
+ALTER TABLE TRANSACTION ADD CONSTRAINT card_transaction_fk
+    FOREIGN KEY (card_id) REFERENCES card (id);
 
 INSERT INTO TRANSACTION (description, value_Transaction, date_Credit, date_Debit, customer_id, bank_id, card_id) VALUES('Today is a beautiful day.', 16234.0, null, '2017-11-21', 1, 1, 1);
 INSERT INTO TRANSACTION (description, value_Transaction, date_Credit, date_Debit, customer_id, bank_id, card_id) VALUES('I love you so much', 1240.0, '2017-02-20', null, 2, 2, 2);
