@@ -3,12 +3,10 @@ package com.wergnet.wergnetoil.api.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.DecimalMin;
@@ -18,40 +16,33 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "transaction")
+@Table
 public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_transaction")
     private Long id;
 
     @NotBlank(message = "Name cannot be null, blank and empty ")
     @Size(max = 50)
     private String description;
     
-    @NotBlank
     @DecimalMin(value = "0.0", inclusive = false)
     @Digits(integer=10, fraction=2)
     private BigDecimal valueTransaction;
     
-	@Column(name = "date_Credit")
     private LocalDate dateCredit;
 	
-	@Column(name = "date_Debit")
 	private LocalDate dateDebit;
     
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "bank_id", nullable = false)
     private Bank bank;
 
     @ManyToOne
-    @JoinColumn(name = "card_id", nullable = false)
     private Card card;
 
 	public Long getId() {

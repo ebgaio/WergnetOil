@@ -13,22 +13,19 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "bank")
+@Table
 public class Bank {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_bank")
     private Long id;
 
     @NotBlank(message = "Name cannot be null")
     @Size(max = 30)
     private String name;
 
-    @NotBlank
     private Long number;
 
-    @NotBlank
     private boolean active;
 
     public Long getId() {

@@ -1,4 +1,4 @@
-package com.wergnet.wergnetoil.api.resource;
+package com.wergnet.wergnetoil.api.controller;
 
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.given;
 import static io.restassured.module.mockmvc.RestAssuredMockMvc.standaloneSetup;
@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 
-import com.wergnet.wergnetoil.api.controller.CardResource;
 import com.wergnet.wergnetoil.api.model.Card;
 import com.wergnet.wergnetoil.api.model.Customer;
 import com.wergnet.wergnetoil.api.service.CardNumberGenerator;

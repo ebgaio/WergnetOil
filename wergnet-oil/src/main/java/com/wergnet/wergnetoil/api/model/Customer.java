@@ -1,6 +1,5 @@
 package com.wergnet.wergnetoil.api.model;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,12 +14,11 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "customer")
+@Table
 public class Customer {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_customer")
 	private Long id;
 	
 	@NotBlank
@@ -31,7 +29,6 @@ public class Customer {
 	@Size(max = 30)
 	private String lastName;
 	
-	@NotBlank
 	private boolean active;
 	
 	@NotBlank

@@ -20,29 +20,25 @@ import javax.validation.constraints.Size;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "card")
+@Table
 public class Card {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "id_card")
 	private Long id;
 
 	@NotBlank
 	@Size(max = 20)
 	private String cardNumber;
 	
-	@NotBlank
     @DecimalMin(value = "0.0", inclusive = false)
     @Digits(integer=10, fraction=2)
 	private BigDecimal balance;
 	
-	@NotBlank
 	private boolean active;
 	
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "customer_id", nullable = false)
 	private Customer customer;
 
 	public Customer getCustomer() {
